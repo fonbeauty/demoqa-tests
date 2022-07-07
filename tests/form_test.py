@@ -10,7 +10,7 @@ class Student:
     email = 'bilbo@demo.qa'
     sex = 'Male'
     phone = '8008008080'
-    birthday = {'day': '22', 'month': '9', 'year': '1937'}
+    birthday = {'day': '22', 'month': 'September', 'year': '1937'}
     subject = 'English'
     hobby = 'Reading'
     address = 'Shire, Rivendell'
@@ -19,21 +19,9 @@ class Student:
     photo = 'Bilbo_B.jpeg'
 
 
-month_name = {'0': 'January',
-              '1': 'February',
-              '2': 'March',
-              '3': 'April',
-              '4': 'May',
-              '5': 'June',
-              '6': 'July',
-              '7': 'August',
-              '8': 'September',
-              '9': 'October',
-              '10': 'November',
-              '11': 'December'}
-
 expected_date_of_birthday = f'{Student.birthday.get("day")} ' \
-                            f'{month_name.get(Student.birthday.get("month"))},{Student.birthday.get("year")}'
+                            f'{Student.birthday.get("month")},' \
+                            f'{Student.birthday.get("year")}'
 
 
 def open_student_registration_form():
@@ -55,7 +43,8 @@ def test_sign_up():
     browser.element('#userNumber').type(Student.phone)
     browser.element('#dateOfBirthInput').click()
     browser.element('.react-datepicker__year-select').element(f'[value="{Student.birthday.get("year")}"]').click()
-    browser.element('.react-datepicker__month-select').element(f'[value="{int(Student.birthday.get("month"))}"]').click()
+    browser.element('.react-datepicker__year-select').all('option').element_by(have.exact_text(Student.birthday.get("year"))).click()
+    browser.element('.react-datepicker__month-select').all('option').element_by(have.exact_text(Student.birthday.get("month"))).click()
     browser.element(f'.react-datepicker__day--0{Student.birthday.get("day")}').click()
     browser.element('#subjectsInput').type(Student.subject).press_tab()
     browser.element('#hobbiesWrapper').all('.custom-checkbox').element_by(have.exact_text(Student.hobby)).click()
