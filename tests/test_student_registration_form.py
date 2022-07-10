@@ -1,9 +1,8 @@
 from selene import have, command
 from selene.support.shared import browser
-from demoqa_tests.controls import dropdown
+from demoqa_tests.controls.dropdown import Dropdown
 from demoqa_tests.controls.tags_input import TagsInput
 
-# from demoqa_tests.controls import tags_input
 from demoqa_tests.utils.file import resource
 
 
@@ -74,8 +73,12 @@ def test_register_student():
         '#currentAddress'
     ).type('4 Privet Drive').perform(command.js.scroll_into_view)
 
-    dropdown.autocomplete(browser.element('#state'), option='Uttar Pradesh')
-    dropdown.autocomplete(browser.element('#city'), option='Lucknow')
+    state_dropdown = Dropdown(browser.element('#state'))
+    city_dropdown = Dropdown(browser.element('#city'))
+
+    state_dropdown.select('Uttar Pradesh')
+    city_dropdown.autocomplete('Lucknow')
+
     '''
     # OR (future version):
     Dropdown(browser.element('#state')).select(option='Uttar Pradesh')
