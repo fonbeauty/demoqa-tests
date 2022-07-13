@@ -2,6 +2,7 @@ from selene import have, command
 from selene.support.shared import browser
 from demoqa_tests.controls.dropdown import Dropdown
 from demoqa_tests.controls.tags_input import TagsInput
+from demoqa_tests.controls.date_picker import DatePicker, Month
 
 from demoqa_tests.utils.file import resource
 
@@ -29,17 +30,11 @@ def test_register_student():
 
     browser.element('#userNumber').type('1234567890')
 
-    browser.element('#dateOfBirthInput').click()
-    browser.element(
-        '.react-datepicker__month-select'
-    ).all('option').element_by(have.exact_text('July')).click()
-    browser.element(
-        '.react-datepicker__year-select'
-    ).all('option').element_by(have.exact_text('1980')).click()
-    browser.element(f'.react-datepicker__day--0{31}').click()
+    date_birth = DatePicker(browser.element('#dateOfBirthInput'))
+    date_birth.set_date_from_picker(6, Month.January, '1988')
     '''
-    # OR:
-    browser.element('#dateOfBirthInput').perform(command.js.set_value('31 Jul 1980'))
+    set date direct
+    date_birth.set_date_direct('6 Jul 1988')
     '''
 
     subjects = TagsInput(browser.element('#subjectsInput'))
