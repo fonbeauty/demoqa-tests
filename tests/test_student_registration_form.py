@@ -41,24 +41,10 @@ def test_register_student():
 
     subjects.autocomplete('Chem', 'Chemistry')
     subjects.type('Maths')
-    '''
-    # OR:
-    subjects = browser.element('#subjectsInput')
-    tags_input.add(subjects, from_='Chem', autocomplete='Chemistry')
-    tags_input.add(subjects, from_='Maths')
-    '''
 
-    browser.all('.custom-checkbox').element_by(have.exact_text('Sports')).click()
+    browser.all('.custom-checkbox')
     browser.all('.custom-checkbox').element_by(have.exact_text('Reading')).click()
     browser.all('.custom-checkbox').element_by(have.exact_text('Music')).click()
-    '''
-    # OR
-    browser.element('#hobbiesWrapper').all('.custom-checkbox').element_by(have.text('Sports')).click()
-    # OR
-    sports_hobby = browser.element('[for=hobbies-checkbox-1]')
-    sports_hobby.click()
-    ...
-    '''
 
     browser.element('#uploadPicture').send_keys(
         resource('Bilbo_B.jpeg')
@@ -73,16 +59,6 @@ def test_register_student():
 
     state_dropdown.select('Uttar Pradesh')
     city_dropdown.autocomplete('Lucknow')
-
-    '''
-    # OR (future version):
-    Dropdown(browser.element('#state')).select(option='Uttar Pradesh')
-    Dropdown(browser.element('#city')).select(option='Lucknow')
-    
-    # OR (first version):
-    select.by_choose(browser.element('#state'), option='Uttar Pradesh')
-    select.by_autocomplete(browser.element('#city'), option='Lucknow')
-    '''
 
     subjects.type('Physics')
 
