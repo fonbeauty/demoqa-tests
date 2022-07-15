@@ -1,6 +1,7 @@
 from selene import have, command
 from selene.support.shared import browser
 from demoqa_tests.controls.dropdown import Dropdown
+from demoqa_tests.controls.table import Table
 from demoqa_tests.controls.tags_input import TagsInput
 from demoqa_tests.controls.date_picker import DatePicker, Month
 
@@ -69,18 +70,15 @@ def test_register_student():
         have.text('Thanks for submitting the form')
     )
 
-    def cells_of_row(index):
-        return browser.element(
-            '.modal-content .table'
-            ).all('tbody tr')[index].all('td')
+    results = Table()
 
-    cells_of_row(0).should(have.exact_texts('Student Name', 'Harry Potter'))
-    cells_of_row(1).should(have.exact_texts('Student Email', 'theboywholived@hogwarts.edu'))
-    cells_of_row(2).should(have.exact_texts('Gender', 'Male'))
-    cells_of_row(3).should(have.exact_texts('Mobile', '1234567890'))
-    cells_of_row(4).should(have.exact_texts('Date of Birth', '31 July,1980'))
-    cells_of_row(5).should(have.exact_texts('Subjects', 'Chemistry, Maths, Physics'))
-    cells_of_row(6).should(have.exact_texts('Hobbies', 'Sports, Reading, Music'))
-    cells_of_row(7).should(have.exact_texts('Picture', 'Bilbo_B.jpeg'))
-    cells_of_row(8).should(have.exact_texts('Address', '4 Privet Drive'))
-    cells_of_row(9).should(have.exact_texts('State and City', 'Uttar Pradesh Lucknow'))
+    results.cells_of_row(1).should(have.exact_text('Student Name Harry Potter'))
+    results.cells_of_row(2).should(have.exact_text('Student Email theboywholived@hogwarts.edu'))
+    results.cells_of_row(3).should(have.exact_text('Gender Male'))
+    results.cells_of_row(4).should(have.exact_text('Mobile 1234567890'))
+    results.cells_of_row(5).should(have.exact_text('Date of Birth 06 January,1988'))
+    results.cells_of_row(6).should(have.exact_text('Subjects Chemistry, Maths, Physics'))
+    results.cells_of_row(7).should(have.exact_text('Hobbies Reading, Music'))
+    results.cells_of_row(8).should(have.exact_text('Picture Bilbo_B.jpeg'))
+    results.cells_of_row(9).should(have.exact_text('Address 4 Privet Drive'))
+    results.cells_of_row(10).should(have.exact_text('State and City Uttar Pradesh Lucknow'))
