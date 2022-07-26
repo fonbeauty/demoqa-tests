@@ -1,29 +1,37 @@
 from selene import have, command
 from selene.support.shared import browser
-from demoqa_tests.controls.dropdown import Dropdown
-from demoqa_tests.controls.table import Table
-from demoqa_tests.controls.tags_input import TagsInput
-from demoqa_tests.controls.date_picker import DatePicker, Month
+from demoqa_tests.data import User
+from demoqa_tests.model.application_manager import app
+from demoqa_tests.model.controls import dropdown
+from demoqa_tests import utils
 
-from demoqa_tests.utils.file import resource
-
-
-def given_student_registration_form_opened():
-    browser.open('/automation-practice-form')
-    (
-        browser.all('[id^=google_ads][id$=container__],[id$=Advertisement]')
-            .with_(timeout=10)
-            .should(have.size_greater_than_or_equal(1))
-            .perform(command.js.remove)
-    )
+'''
+# Just an example of Fluent PageObject application:
+# BAD (with returning main_page from de_login):
+sign_in_page.do_login('drako.malfoy@gmail.com', 'Cruc1@tu$').add_post('Potter!!!! you must die!!!')
+# GOOD (without Fluent PageObject):
+sign_in_page.do_login('drako.malfoy@gmail.com', 'Cruc1@tu$')
+main_page.add_post('Potter!!!! you must die!!!')
+'''
 
 
 def test_register_student():
-    given_student_registration_form_opened()
+    app.given_student_registration_form_opened()
+    harry_potter = User(
+        first_name='Harry',
+        last_name='Potter',
+        subjects=['Chemistry', 'Maths', 'Physics'],
+    )
 
     # WHEN
-    browser.element('#firstName').type('Harry')
-    browser.element('#lastName').type('Potter')
+    app.form.fill_form(harry_potter)
+    '''
+    # OR:
+    app.form.set_first_name('Harry').set_last_name('Potter')
+    # somewhere later:
+    app.results.should_have_row_with_exact_texts(...)
+    '''
+
     browser.element('#userEmail').type('theboywholived@hogwarts.edu')
 
     gender = browser.element('#genterWrapper')
@@ -31,54 +39,99 @@ def test_register_student():
 
     browser.element('#userNumber').type('1234567890')
 
-    date_birth = DatePicker(browser.element('#dateOfBirthInput'))
-    date_birth.set_date_from_picker(6, Month.January, '1988')
+    browser.element('#dateOfBirthInput').click()
+    browser.element(
+        '.react-datepicker__month-select'
+    ).all('option').element_by(have.exact_text('July')).click()
+    browser.element(
+        '.react-datepicker__year-select'
+    ).all('option').element_by(have.exact_text('1980')).click()
+    browser.element(f'.react-datepicker__day--0{31}').click()
     '''
-    set date direct
-    date_birth.set_date_direct('6 Jul 1988')
+    # OR:
+    browser.element('#dateOfBirthInput').perform(command.js.set_value('31 Jul 1980'))
+    
+    # Some ideas:
+    class Months(Enum):
+        September = 8
+        Aug = 7
+    DatePicker(browser.element('#dateOfBirthInput')).open().select_month(Months.Aug).select_year(1999).select_day(30)
+    form.set_birth_date(30, Months.Aug, 1999)
     '''
 
-    subjects = TagsInput(browser.element('#subjectsInput'))
+    '''
+    subjects = object.__new__(TagsInput)
+    TagsInput.__init__(subjects, browser.element('#subjectsInput'))
+    TagsInput.add(subjects, 'Maths')
+    '''
 
-    subjects.autocomplete('Chem', 'Chemistry')
-    subjects.type('Maths')
+    app.form.add_subjects('Chemistry', 'Maths', 'Physics')
+    app.form.should_have_subjects('Chemistry', 'Maths', 'Physics')
+    '''
+    # other versions (but locators are wrong below):
+    app.form.subjects.element.should(have.text(''.join(['Chemistry', 'Maths', 'Physics'])))
+    app.form.subjects.should_have_texts('Chemistry', 'Maths', 'Physics')
+    # OR:
+    subjects = browser.element('#subjectsInput')
+    tags_input.add(subjects, from_='Chem', autocomplete='Chemistry')
+    tags_input.add(subjects, from_='Maths')
+    '''
 
-    browser.all('.custom-checkbox')
+    browser.all('.custom-checkbox').element_by(have.exact_text('Sports')).click()
     browser.all('.custom-checkbox').element_by(have.exact_text('Reading')).click()
     browser.all('.custom-checkbox').element_by(have.exact_text('Music')).click()
+    '''
+    # OR
+    browser.element('#hobbiesWrapper').all('.custom-checkbox').element_by(have.text('Sports')).click()
+    # OR
+    sports_hobby = browser.element('[for=hobbies-checkbox-1]')
+    sports_hobby.click()
+    ...
+    '''
 
     browser.element('#uploadPicture').send_keys(
-        resource('Bilbo_B.jpeg')
+        utils.paths.resource('Bilbo_B.jpeg')
     )
 
     browser.element(
         '#currentAddress'
     ).type('4 Privet Drive').perform(command.js.scroll_into_view)
 
-    state_dropdown = Dropdown(browser.element('#state'))
-    city_dropdown = Dropdown(browser.element('#city'))
+    dropdown.autocomplete(browser.element('#state'), option='Uttar Pradesh')
+    dropdown.autocomplete(browser.element('#city'), option='Lucknow')
+    '''
+    # OR (future version):
+    Dropdown(browser.element('#state')).select('Uttar Pradesh')
+    Dropdown(browser.element('#city')).select('Lucknow')
+    
+    # OR (first version):
+    select.by_choose(browser.element('#state'), option='Uttar Pradesh')
+    select.by_autocomplete(browser.element('#city'), option='Lucknow')
+    '''
 
-    state_dropdown.select('Uttar Pradesh')
-    city_dropdown.autocomplete('Lucknow')
-
-    subjects.type('Physics')
-
-    browser.element('#submit').perform(command.js.click)
+    app.form.submit()
 
     # THEN
-    browser.element('#example-modal-sizes-title-lg').should(
-        have.text('Thanks for submitting the form')
-    )
+    app.results.should_have_row_with_exact_texts('Student Name', 'Harry Potter')
+    '''
+    results.table.cells_of_row(1).should(have.exact_texts('Student Name', 'Harry Potter'))
+    results.table.cells_of_row(1).should(have.exact_texts('Student Name', 'Harry Potter'))
+    results.table.cells_of_row(1).should(have.exact_texts('Student Name', 'Harry Potter'))
+    results.table.cells_of_row(1).should(have.exact_texts('Student Name', 'Harry Potter'))
+    '''
 
-    results = Table()
+    '''
+    # Just an example of cell(1, 2) returning another Cell page-object
+    results.cell(1, 2).start_editing().set('new value').save()
+    '''
 
-    results.cells_of_row(1).should(have.exact_text('Student Name Harry Potter'))
-    results.cells_of_row(2).should(have.exact_text('Student Email theboywholived@hogwarts.edu'))
-    results.cells_of_row(3).should(have.exact_text('Gender Male'))
-    results.cells_of_row(4).should(have.exact_text('Mobile 1234567890'))
-    results.cells_of_row(5).should(have.exact_text('Date of Birth 06 January,1988'))
-    results.cells_of_row(6).should(have.exact_text('Subjects Chemistry, Maths, Physics'))
-    results.cells_of_row(7).should(have.exact_text('Hobbies Reading, Music'))
-    results.cells_of_row(8).should(have.exact_text('Picture Bilbo_B.jpeg'))
-    results.cells_of_row(9).should(have.exact_text('Address 4 Privet Drive'))
-    results.cells_of_row(10).should(have.exact_text('State and City Uttar Pradesh Lucknow'))
+    app.results.table.cells_of_row(1).should(have.exact_texts('Student Name', 'Harry Potter'))
+    app.results.table.cells_of_row(2).should(have.exact_texts('Student Email', 'theboywholived@hogwarts.edu'))
+    app.results.table.cells_of_row(3).should(have.exact_texts('Gender', 'Male'))
+    app.results.table.cells_of_row(4).should(have.exact_texts('Mobile', '1234567890'))
+    app.results.table.cells_of_row(5).should(have.exact_texts('Date of Birth', '31 July,1980'))
+    app.results.table.cells_of_row(6).should(have.exact_texts('Subjects', 'Chemistry, Maths, Physics'))
+    app.results.table.cells_of_row(7).should(have.exact_texts('Hobbies', 'Sports, Reading, Music'))
+    app.results.table.cells_of_row(8).should(have.exact_texts('Picture', 'Bilbo_B.jpeg'))
+    app.results.table.cells_of_row(9).should(have.exact_texts('Address', '4 Privet Drive'))
+    app.results.table.cells_of_row(10).should(have.exact_texts('State and City', 'Uttar Pradesh Lucknow'))
