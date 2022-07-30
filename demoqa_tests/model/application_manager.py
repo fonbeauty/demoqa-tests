@@ -20,6 +20,3 @@ class ApplicationManager:
                 .perform(command.js.remove)
         )
         return self
-
-
-app = ApplicationManager()
