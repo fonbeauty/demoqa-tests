@@ -1,8 +1,8 @@
 def resource(relative_path):
-    import demo
+    import demoqa
     from pathlib import Path
     return (
-        Path(demo.__file__)
+        Path(demoqa.__file__)
             .parent
             .parent
             .joinpath('resources/')

@@ -1,8 +1,8 @@
 import allure
 from selene import have
 
-from demo.model.application_manager import app
-from demo.data import User
+from demoqa.model.application_manager import app
+from demoqa.data import User
 
 
 

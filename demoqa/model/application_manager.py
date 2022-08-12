@@ -1,7 +1,7 @@
 from selene import have, command
 from selene.support.shared import browser
-from demo.model.components.modal_dialog import ModalDialog
-from demo.model.pages.student_registration_page import StudentRegistrationForm
+from demoqa.model.components.modal_dialog import ModalDialog
+from demoqa.model.pages.student_registration_page import StudentRegistrationForm
 
 
 class ApplicationManager:
