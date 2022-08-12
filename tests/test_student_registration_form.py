@@ -1,7 +1,9 @@
 import allure
 from selene import have
-from demoqa_tests.data import User
+
 from demoqa_tests.model.application_manager import app
+from demoqa_tests.data import User
+
 
 
 @allure.feature('Регистрация студента')
