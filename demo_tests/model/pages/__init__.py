@@ -1,1 +1,0 @@
-from demo_tests.utils import paths
