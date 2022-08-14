@@ -2,8 +2,9 @@ import allure
 from selene import have
 
 from demoqa.model.application_manager import app
+from selene.support.shared import browser
 from demoqa.data import User
-
+from utils import attach
 
 
 @allure.feature('Регистрация студента')
@@ -47,3 +48,10 @@ def test_register_student(browser_management):
         app.results.table.cells_of_row(8).should(have.exact_texts('Picture', 'Bilbo_B.jpeg'))
         app.results.table.cells_of_row(9).should(have.exact_texts('Address', '4 Privet Drive'))
         app.results.table.cells_of_row(10).should(have.exact_texts('State and City', 'Uttar Pradesh Lucknow'))
+
+    attach.add_html(browser)
+    attach.add_logs(browser)
+    attach.add_screenshot(browser)
+
+
+
