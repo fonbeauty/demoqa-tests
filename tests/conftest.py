@@ -4,6 +4,8 @@ from selene.support.shared import browser
 import pytest
 from selenium import webdriver
 
+from utils import attach
+
 
 @pytest.fixture(scope='function')
 def browser_management():
@@ -26,3 +28,15 @@ def browser_management():
             os.getenv('selene.hold_browser_open', 'false').lower() == 'true'
     )
     browser.config.timeout = float(os.getenv('selene.timeout', '3'))
+
+
+@pytest.fixture(scope='function')
+def add_allure_attach():
+
+    yield
+
+    attach.add_html(browser)
+    attach.add_logs(browser)
+    attach.add_screenshot(browser)
+    attach.add_video(browser)
+
