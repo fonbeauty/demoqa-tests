@@ -1,9 +1,9 @@
 from selene import command, have
 from selene.support.shared import browser
-from demoqa_tests import utils
-from demoqa_tests.data import User
-from demoqa_tests.model.controls import dropdown
-from demoqa_tests.model.controls.tags_input import TagsInput
+from demoqa import utils
+from demoqa.data import User
+from demoqa.model.controls import dropdown
+from demoqa.model.controls.tags_input import TagsInput
 
 
 class StudentRegistrationForm:

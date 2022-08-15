@@ -1,12 +1,15 @@
 import allure
 from selene import have
-from demoqa_tests.data import User
-from demoqa_tests.model.application_manager import app
+
+from demoqa.model.application_manager import app
+from selene.support.shared import browser
+from demoqa.data import User
+from utils import attach
 
 
 @allure.feature('Регистрация студента')
 @allure.story('Заполнение формы данных регистрации студента')
-def test_register_student(browser_management):
+def test_register_student(browser_management, add_allure_attach):
     with allure.step('Подготовка данных студента'):
         app.given_student_registration_form_opened()
         harry_potter = User(
@@ -45,3 +48,11 @@ def test_register_student(browser_management):
         app.results.table.cells_of_row(8).should(have.exact_texts('Picture', 'Bilbo_B.jpeg'))
         app.results.table.cells_of_row(9).should(have.exact_texts('Address', '4 Privet Drive'))
         app.results.table.cells_of_row(10).should(have.exact_texts('State and City', 'Uttar Pradesh Lucknow'))
+
+    # attach.add_html(browser)
+    # attach.add_logs(browser)
+    # attach.add_screenshot(browser)
+    # attach.add_video(browser)
+
+
+
