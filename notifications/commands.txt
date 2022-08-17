@@ -1,0 +1,8 @@
+xxx:AAHFbMFH9cw1A47xFjv8KBUjeyA_uAVwQZY
+
+
+https://api.telegram.org/botxxx:AAHFbMFH9cw1A47xFjv8KBUjeyA_uAVwQZY/getUpdates
+
+curl -X POST -H 'Content-Type: application/json' -d '{"chat_id": "-1001658932003", "text": "Приём, приём", "disable_notification": true}' https://api.telegram.org/botxxx:AAHFbMFH9cw1A47xFjv8KBUjeyA_uAVwQZY/sendMessage
+
+java "-DconfigFile=notifications/config.json" -jar notifications/allure-notifications-4.2.1.jar

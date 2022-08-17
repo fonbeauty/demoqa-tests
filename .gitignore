@@ -132,5 +132,8 @@ dmypy.json
 allure
 tests/allure-results
 allure-results
+allure-report
 
 .idea
+
+notifications/commands_rez.txt
