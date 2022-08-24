@@ -3,4 +3,4 @@ selene>=2.0.b4
 allure-pytest==2.9.45
 python-dotenv==0.20.0
 selenium==4.2.0
-dotenv==0.0.5
+python-dotenv==0.20.0
