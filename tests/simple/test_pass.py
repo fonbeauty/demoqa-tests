@@ -21,7 +21,6 @@ def test_desktop_browser(browser: WebDriver):
     assert_h1(browser)
 
 
-
 def test_mobile_browser(browser: WebDriver):
     width = browser.get_window_size().get("width")
     height = browser.get_window_size().get("height")
