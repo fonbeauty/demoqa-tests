@@ -4,6 +4,7 @@ allure-pytest==2.9.45
 python-dotenv==0.20.0
 selenium==4.2.0
 python-dotenv==0.20.0
+requests
 voluptuous
 pytest-voluptuous
 
